@@ -1,0 +1,40 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "import",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript"
+  ],
+  "rules": {
+    "brace-style": ["error","1tbs"],
+    "comma-dangle": ["warn", "always-multiline"],
+    "curly": ["error","all"],
+    "eol-last": ["error", "always"],
+    "eqeqeq": "error",
+    "import/order": ["error", {
+      "groups": ["builtin", "external", "parent", "sibling", "index"],
+      "alphabetize": {
+        "order": "asc"
+      }
+    }],
+    "indent": "error",
+    "no-extend-native": "error",
+    "no-mixed-spaces-and-tabs": "error",
+    "no-tabs": "error",
+    "object-curly-spacing": ["error","always"],
+    "quotes": ["error","double"],
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": "off",
+    "semi": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+
+  }
+}
