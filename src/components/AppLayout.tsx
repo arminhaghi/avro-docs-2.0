@@ -28,8 +28,8 @@ const AppLayout = (props: PropsType): JSX.Element => {
                         theme="dark"
                         forceSubMenuRender={true}
                         inlineCollapsed={false}
-                        selectedKeys={[item]}
-                        openKeys={[item.substring(0, item.lastIndexOf("."))]}
+                        defaultSelectedKeys={[item]}
+                        defaultOpenKeys={[item.substring(0, item.lastIndexOf("."))]}
                     >
                         {Array.from(appData.namespaceTree.keys()).map(key => {
                             return (

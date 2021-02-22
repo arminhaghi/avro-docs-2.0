@@ -1,3 +1,5 @@
+import { Badge } from "antd";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import { TagHelper } from "../utils/TagHelper";
 
@@ -6,6 +8,17 @@ export interface RowData {
     type: any;
     defaultValue: any;
     doc: string;
+}
+
+interface Option {
+    title: string;
+    default: boolean;
+}
+
+export interface EnumData {
+    option: Option;
+    index: number;
+    key: string;
 }
 
 export const FieldColumns = [
@@ -30,5 +43,27 @@ export const FieldColumns = [
         dataIndex: "doc",
         key: "docs",
         render: (text: string): JSX.Element => <ReactMarkdown linkTarget="_blank">{text}</ReactMarkdown>,
+    },
+];
+
+export const EnumColumns = [
+    {
+        title: "Index",
+        dataIndex: "index",
+        key: "index",
+        width: 100,
+    },
+    {
+        title: "Options",
+        dataIndex: "option",
+        key: "option",
+        render: (option: Option): JSX.Element => (
+            <>
+                <span>{option.title}</span>
+                {option.default ? <Badge offset={[40, 0]} count={"default value"}/> : null}
+            </>
+
+        ),
+
     },
 ];

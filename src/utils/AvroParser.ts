@@ -3,6 +3,9 @@ import * as AVRO from "avsc";
 export class AvroParser {
 
     public static GetAllRecords(schema: any, records: Map<string, AVRO.Schema>): void {
+        if (!schema) {
+            return;
+        }
         if (schema.branchName === "") {
             schema.branchName = "UNKNOWN";
         }
@@ -16,7 +19,7 @@ export class AvroParser {
                     });
                 }
             }
-        } else if (schema.type.branchName === "array") {
+        } else if (schema.type && schema.type.branchName === "array") {
             if (!records.has(schema.type.itemsType.branchName)) {
                 records.set(schema.type.itemsType.branchName, schema.type.itemsType);
 
@@ -27,24 +30,39 @@ export class AvroParser {
                 }
 
             }
-        } else if (AVRO.Type.isType(schema, "MapType")) {
+        } else if (AVRO.Type.isType(schema, "enum")) {
+            if (!records.has(schema.branchName)) {
+                records.set(schema.branchName, schema);
+            }
+        } else if (AVRO.Type.isType(schema.type, "record")) {
+            AvroParser.GetAllRecords(schema.type, records);
+        } else if (AVRO.Type.isType(schema.type, "MapType")) {
             console.log("MapType");
             records.set("MapType", schema);
-        } else if (AVRO.Type.isType(schema, "EnumType")) {
-            console.log("EnumType");
-            records.set("EnumType", schema);
-        } else if (AVRO.Type.isType(schema, "FixedType")) {
+        } else if (AVRO.Type.isType(schema.type, "enum")) {
+            // console.log("EnumType");
+            // records.set("EnumType", schema.type);
+            AvroParser.GetAllRecords(schema.type, records);
+        } else if (AVRO.Type.isType(schema.type, "fixed")) {
             console.log("FixedType");
-            records.set("FixedType", schema);
-        } else if (AVRO.Type.isType(schema, "LogicalType")) {
+            records.set("FixedType", schema.type);
+        } else if (AVRO.Type.isType(schema.type, "logical")) {
             console.log("LogicalType");
-            records.set("LogicalType", schema);
-        } else if (AVRO.Type.isType(schema, "UnwrappedUnionType")) {
+            records.set("LogicalType", schema.type);
+        } else if (AVRO.Type.isType(schema.type, "union")) {
+            // records.set("UnionType", schema.type);
+            console.log("UnionType", schema.type);
+            for (let i = 0; i < schema.type.types.length; i++) {
+                AvroParser.GetAllRecords(schema.type.types[i], records);
+            }
+        } else if (AVRO.Type.isType(schema.type, "union:unwrapped")) {
+            // records.set("UnwrappedUnionType", schema.type);
             console.log("UnwrappedUnionType");
-            records.set("UnwrappedUnionType", schema);
-        } else if (AVRO.Type.isType(schema, "WrappedUnionType")) {
+            AvroParser.GetAllRecords(schema.type, records);
+        } else if (AVRO.Type.isType(schema.type, "union:wrapped")) {
+            // records.set("WrappedUnionType", schema.type);
             console.log("WrappedUnionType");
-            records.set("WrappedUnionType", schema);
+            AvroParser.GetAllRecords(schema.type, records);
         } else {
             // console.log("typeName", schema.typeName);
             // console.log("type", schema.type);

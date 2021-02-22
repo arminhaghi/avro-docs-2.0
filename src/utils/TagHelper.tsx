@@ -1,5 +1,5 @@
 import * as AVRO from "avsc";
-import React from "react";
+import React, { Fragment } from "react";
 import DataType from "../components/DataType";
 import { TagColorPicker } from "./TagColorPicker";
 import { ComplexType, TypeHelper } from "./TypeHelper";
@@ -46,19 +46,17 @@ export class TagHelper {
             const branchName2 = unionType.types[1].branchName || "";
 
             return (
-                <>
+                <Fragment key={key.toString()}>
                     <DataType
                         color={TagColorPicker.pick(branchName1)}
-                        key={key.toString()}
                         data={TypeHelper.formatTag(branchName1, branchName1)}
                     />
                     OR&nbsp;&nbsp;
                     <DataType
                         color={TagColorPicker.pick(branchName2)}
-                        key={key.toString()}
                         data={ TypeHelper.formatTag(branchName2, branchName2)}
                     />
-                </>
+                </Fragment>
             );
         }
 
