@@ -5,7 +5,7 @@ import { AvroParser } from "../utils/AvroParser";
 interface ContextState {
     namespaces: string[];
     namespaceTree: Map<string, string[]>;
-    schemas: Map<string, any>;
+    schemas: Map<string, AVRO.Schema>;
 }
 
 const initialState = {
@@ -35,9 +35,8 @@ export const DataProvider = (props: any): JSX.Element => {
         const parsed3 = AVRO.parse(JSON.stringify(schema3));
         const parsed4 = AVRO.parse(JSON.stringify(schema4));
         const parsed5 = AVRO.parse(JSON.stringify(schema5));
-        // const parsedExampleWMessage = AVRO.parse(JSON.stringify(schema3));
 
-        const records = new Map<string, any>();
+        const records = new Map<string, AVRO.Schema>();
         AvroParser.GetAllRecords(parsed1, records);
         AvroParser.GetAllRecords(parsed1, records);
         AvroParser.GetAllRecords(parsed1, records);
@@ -48,17 +47,16 @@ export const DataProvider = (props: any): JSX.Element => {
 
         const namespaces = Array.from(records.keys());
         const namespaceTree = new Map<string, string[]>();
-        const schemas = new Map<string, any>();
+        const schemas = new Map<string, AVRO.Schema>();
 
         namespaces.forEach(namespace => {
-            // namespaceTree.add(namespace.substring(0, namespace.lastIndexOf(".")));
-            const parent = namespace.substring(0, namespace.lastIndexOf("."));
+            const parent = namespace.substring(0, namespace.lastIndexOf(".")) || "UNKNOWN";
             const child = namespace.substring(namespace.lastIndexOf(".") + 1);
             const children = namespaceTree.get(parent) || [];
             children.push(child);
             namespaceTree.set(parent, children);
 
-            schemas.set(namespace.toLowerCase(), records.get(namespace));
+            schemas.set(namespace.toLowerCase(), records.get(namespace) || "");
         });
 
         setAppData({

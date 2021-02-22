@@ -2,7 +2,10 @@ import * as AVRO from "avsc";
 
 export class AvroParser {
 
-    public static GetAllRecords(schema: any, records: Map<string, any>): void {
+    public static GetAllRecords(schema: any, records: Map<string, AVRO.Schema>): void {
+        if (schema.branchName === "") {
+            schema.branchName = "UNKNOWN";
+        }
         if (AVRO.Type.isType(schema, "record")) {
             if (!records.has(schema.branchName)) {
                 records.set(schema.branchName, schema);

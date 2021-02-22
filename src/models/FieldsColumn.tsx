@@ -1,6 +1,12 @@
-import { Tag } from "antd";
 import ReactMarkdown from "react-markdown";
-import { TagColorPicker } from "../utils/TagColorPicker";
+import { TagHelper } from "../utils/TagHelper";
+
+export interface RowData {
+    name: string;
+    type: any;
+    defaultValue: any;
+    doc: string;
+}
 
 export const FieldColumns = [
     {
@@ -12,14 +18,17 @@ export const FieldColumns = [
         title: "Data Type",
         dataIndex: "type",
         key: "type",
-        render: (data: any) => {
-            return (<Tag color={TagColorPicker.pick(data.branchName)}>{data.branchName?.toUpperCase()}</Tag>);
-        },
+        render: TagHelper.render,
+    },
+    {
+        title: "Default",
+        dataIndex: "defaultValue",
+        key: "default",
     },
     {
         title: "Documentation",
         dataIndex: "doc",
         key: "docs",
-        render: (text: string) => <ReactMarkdown linkTarget="_blank">{text}</ReactMarkdown>,
+        render: (text: string): JSX.Element => <ReactMarkdown linkTarget="_blank">{text}</ReactMarkdown>,
     },
 ];

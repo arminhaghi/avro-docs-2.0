@@ -97,7 +97,8 @@
             {
               "name": "oauthTokenSecret",
               "doc": "The OAuth secret, used for signing requests on behalf of this Twitter account. `null` whilst the OAuth flow is not yet complete.",
-              "type": ["null", "string"]
+              "type": ["null", "string"],
+              "default": null
             },
             {
               "name": "dateAuthorized",

@@ -1,4 +1,6 @@
 import { Layout, Menu } from "antd";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDataContext } from "../context/data";
 // import { useRouter } from "next/router";
 import AppFooter from "./AppFooter";
@@ -14,6 +16,8 @@ const AppLayout = (props: PropsType): JSX.Element => {
     const { SubMenu } = Menu;
     // const router = useRouter();
     const [appData] = useDataContext();
+    const params = useParams<{ item?: string }>();
+    const item = params.item || "";
 
     return (
         <Layout>
@@ -27,17 +31,22 @@ const AppLayout = (props: PropsType): JSX.Element => {
                         theme="dark"
                         forceSubMenuRender={true}
                         inlineCollapsed={false}
-                        defaultOpenKeys={[]}
-                        onSelect={({ key }) => {
-                            // router.push(key.toString().toLowerCase());
-                        }}
+                        defaultSelectedKeys={[item]}
+                        defaultOpenKeys={[item.substring(0, item.lastIndexOf("."))]}
                     >
                         {Array.from(appData.namespaceTree.keys()).map(key => {
                             return (
                                 <SubMenu key={key} title={key}>
                                     {
                                         // @ts-ignore
-                                        appData.namespaceTree.get(key).map(child => (<Menu.Item key={`${key}.${child}`}>{child}</Menu.Item>))
+                                        appData.namespaceTree.get(key).map(child => {
+                                            const childKey = `${key}.${child}`;
+                                            return (
+                                                <Menu.Item key={childKey}>
+                                                    <Link to={`/${childKey}`}>{child}</Link>
+                                                </Menu.Item>
+                                            );
+                                        })
                                     }
                                 </SubMenu>
                             );
