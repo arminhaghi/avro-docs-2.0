@@ -2,19 +2,16 @@ import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useDataContext } from "../context/data";
-// import { useRouter } from "next/router";
 import AppFooter from "./AppFooter";
 import AppHeader from "./AppHeader";
 
 interface PropsType {
     children: JSX.Element | JSX.Element[];
-    // namespaceTree: Map<string, string[]>;
 }
 
 const AppLayout = (props: PropsType): JSX.Element => {
     const { Content, Sider } = Layout;
     const { SubMenu } = Menu;
-    // const router = useRouter();
     const [appData] = useDataContext();
     const params = useParams<{ item?: string }>();
     const item = params.item || "";
@@ -31,8 +28,8 @@ const AppLayout = (props: PropsType): JSX.Element => {
                         theme="dark"
                         forceSubMenuRender={true}
                         inlineCollapsed={false}
-                        defaultSelectedKeys={[item]}
-                        defaultOpenKeys={[item.substring(0, item.lastIndexOf("."))]}
+                        selectedKeys={[item]}
+                        openKeys={[item.substring(0, item.lastIndexOf("."))]}
                     >
                         {Array.from(appData.namespaceTree.keys()).map(key => {
                             return (

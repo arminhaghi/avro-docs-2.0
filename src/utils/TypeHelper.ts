@@ -72,6 +72,7 @@ export class TypeHelper {
             return {
                 text: formattedName,
                 tooltip: doc,
+                path: name,
             };
         }
     }
@@ -83,6 +84,6 @@ export class TypeHelper {
         } else if (defaultValue === null) {
             return "NULL";
         }
-        return defaultValue;
+        return defaultValue.toString();
     }
 }

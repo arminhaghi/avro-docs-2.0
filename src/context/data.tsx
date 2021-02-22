@@ -1,5 +1,5 @@
 import * as AVRO from "avsc";
-import React, { createContext, useContext, useMemo, useEffect, useState } from "react";
+import React, { createContext, useContext, useMemo, useEffect, useReducer } from "react";
 import { AvroParser } from "../utils/AvroParser";
 
 interface ContextState {
@@ -8,19 +8,43 @@ interface ContextState {
     schemas: Map<string, AVRO.Schema>;
 }
 
+export enum DataActions {
+    SetData,
+}
+
+interface Action {
+    type: DataActions;
+    payload: ContextState;
+}
+
+
 const initialState = {
     namespaces: [],
     namespaceTree: new Map(),
     schemas: new Map(),
 };
 
-const DataContext = createContext<[ContextState]>(
-    [initialState],
+function reducer(state: ContextState, action: Action): ContextState {
+    switch (action.type) {
+    case DataActions.SetData: {
+        const data = action.payload as ContextState;
+        return {
+            ...state,
+            ...data,
+        };
+    }
+    default:
+        throw new Error("Unknown Action!");
+    }
+}
+
+const DataContext = createContext<[ContextState, React.Dispatch<Action>]>(
+    [initialState, (): undefined => undefined],
 );
 
 export const DataProvider = (props: any): JSX.Element => {
-    const [appData, setAppData] = useState<ContextState>(initialState);
-    const value = useMemo(() => [appData], [appData]);
+    const [appData, dispatch] = useReducer(reducer, initialState);
+    const value = useMemo(() => [appData, dispatch], [appData, dispatch]);
 
     const readSchemas = async () => {
         // @ts-ignore
@@ -59,11 +83,11 @@ export const DataProvider = (props: any): JSX.Element => {
             schemas.set(namespace.toLowerCase(), records.get(namespace) || "");
         });
 
-        setAppData({
+        dispatch({ type: DataActions.SetData, payload: {
             namespaceTree: namespaceTree,
             namespaces: namespaces,
             schemas: schemas,
-        });
+        } });
     };
 
     useEffect((): any => {
@@ -77,7 +101,7 @@ export const DataProvider = (props: any): JSX.Element => {
     );
 };
 
-export function useDataContext(): [ContextState] {
+export function useDataContext(): [ContextState, React.Dispatch<Action>] {
     const context = useContext(DataContext);
     if (context === undefined) {
         throw new Error("DataContext must be used within a DataProvider");
