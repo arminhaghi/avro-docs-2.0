@@ -17,7 +17,6 @@ interface Option {
 
 export interface EnumData {
     option: Option;
-    index: number;
     key: string;
 }
 
@@ -47,12 +46,6 @@ export const FieldColumns = [
 ];
 
 export const EnumColumns = [
-    {
-        title: "Index",
-        dataIndex: "index",
-        key: "index",
-        width: 100,
-    },
     {
         title: "Options",
         dataIndex: "option",

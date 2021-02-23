@@ -12,7 +12,7 @@ interface PropsType {
 const Enum = (props: PropsType): JSX.Element => {
     const { schema } = props;
     let i = -1;
-    console.log(schema);
+
     if (schema && schema.name) {
         const rows: EnumData[] = (schema as AVRO.types.EnumType).symbols.map((symbol) => {
             i++;
@@ -21,7 +21,6 @@ const Enum = (props: PropsType): JSX.Element => {
                     title: symbol,
                     default: i === 0,
                 },
-                index: i,
                 key: i.toString(),
             };
         });

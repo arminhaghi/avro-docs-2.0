@@ -15,6 +15,9 @@ const Record = (props: PropsType): JSX.Element => {
     let i = 0;
 
     if (schema && schema.name) {
+        const parent = schema.name.substring(0, schema.name.lastIndexOf(".")) || "UNKNOWN";
+        const child = schema.name.substring(schema.name.lastIndexOf(".") + 1);
+
         const rows: RowData[] = (schema as AVRO.types.RecordType).fields.map(field => {
             return {
                 name: field.name,
@@ -27,15 +30,14 @@ const Record = (props: PropsType): JSX.Element => {
 
         return (
             <>
+                <p>{parent}</p>
                 <PageHeader
-                    title={schema.name.substring(schema.name.lastIndexOf(".") + 1)}
+                    title={child}
                     tags={<Tag color={TagColorPicker.pick(schema.typeName)}>{schema.typeName.toUpperCase()}</Tag>}
                     style={{
                         paddingLeft: 0,
                     }}
                 />
-                <p>Fully qualified name: <strong>{schema.name}</strong></p>
-                <p>Type: <strong>{schema.typeName}</strong></p>
                 <code><ReactMarkdown linkTarget="_blank">{schema.doc || ""}</ReactMarkdown></code>
                 {<Table bordered rowKey={() => (i++)} columns={FieldColumns} dataSource={rows} pagination={false} />}
             </>

@@ -1,5 +1,6 @@
 import * as AVRO from "avsc";
 import React, { createContext, useContext, useMemo, useEffect, useReducer } from "react";
+import AvroFileList from "../avro-file-list.json";
 import { AvroParser } from "../utils/AvroParser";
 
 interface ContextState {
@@ -47,27 +48,22 @@ export const DataProvider = (props: any): JSX.Element => {
     const value = useMemo(() => [appData, dispatch], [appData, dispatch]);
 
     const readSchemas = async () => {
-        // @ts-ignore
-        const schema1 = await import("../avro/user.json");
-        const schema2 = await import("../avro/persons.json");
-        const schema3 = await import("../avro/BalanceAdjustment.json");
-        const schema4 = await import("../avro/ComplexRecord.json");
-        const schema5 = await import("../avro/CommUpdateType.json");
-
-        const parsed1 = AVRO.parse(JSON.stringify(schema1));
-        const parsed2 = AVRO.parse(JSON.stringify(schema2));
-        const parsed3 = AVRO.parse(JSON.stringify(schema3));
-        const parsed4 = AVRO.parse(JSON.stringify(schema4));
-        const parsed5 = AVRO.parse(JSON.stringify(schema5));
-
         const records = new Map<string, AVRO.Schema>();
-        AvroParser.GetAllRecords(parsed1, records);
-        AvroParser.GetAllRecords(parsed1, records);
-        AvroParser.GetAllRecords(parsed1, records);
-        AvroParser.GetAllRecords(parsed2, records);
-        AvroParser.GetAllRecords(parsed3, records);
-        AvroParser.GetAllRecords(parsed4, records);
-        AvroParser.GetAllRecords(parsed5, records);
+
+        for (let i = 0; i < AvroFileList.length; i++) {
+            const schema = await fetch(
+                process.env.PUBLIC_URL + AvroFileList[i],
+                {
+                    headers : {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                }
+            );
+
+            const parsed = AVRO.parse(JSON.stringify(await schema.json()));
+            AvroParser.GetAllRecords(parsed, records);
+        }
 
         const namespaces = Array.from(records.keys());
         const namespaceTree = new Map<string, string[]>();
@@ -83,11 +79,13 @@ export const DataProvider = (props: any): JSX.Element => {
             schemas.set(namespace.toLowerCase(), records.get(namespace) || "");
         });
 
-        dispatch({ type: DataActions.SetData, payload: {
-            namespaceTree: namespaceTree,
-            namespaces: namespaces,
-            schemas: schemas,
-        } });
+        dispatch({
+            type: DataActions.SetData, payload: {
+                namespaceTree: namespaceTree,
+                namespaces: namespaces,
+                schemas: schemas,
+            },
+        });
     };
 
     useEffect((): any => {

@@ -1,0 +1,6 @@
+[
+    "avro/user.json",
+    "avro/BalanceAdjustment.json",
+    "avro/ComplexRecord.json",
+    "avro/CommUpdateType.json"
+]

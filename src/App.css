@@ -40,5 +40,13 @@
 }
 
 .content-layout {
-  padding: 25px;
+  padding: 24px;
+  overflow: auto;
+  margin: 0;
+}
+
+.sider-layout {
+  overflow: auto;
+  height: "calc(100vh - 88px)";
+  max-width: "calc(100vh - 88px)";
 }
