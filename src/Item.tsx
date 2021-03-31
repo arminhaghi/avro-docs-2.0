@@ -1,18 +1,40 @@
-import * as AVRO from "avsc";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Enum from "./components/Enum";
 import Record from "./components/Record";
-import { useDataContext } from "./context/data";
+import { NamedType } from "./models/AvroSchema";
+import { AvroTypeHelper } from "./utils/AvroTypeHelper";
+import { CustomAvroParser } from "./utils/CustomAvroParser";
 
 const Item = (): JSX.Element => {
     const { item } = useParams<{ item: string }>();
-    const [appData] = useDataContext();
-    const schema = appData.schemas.get(item.toLowerCase()) as AVRO.Type;
+    const [schema, setSchema] = useState<NamedType>();
+
+    const fetchSchema = async () => {
+        try {
+            const schemaContent = await fetch(
+                `${process.env.PUBLIC_URL}/avro/${item.replaceAll(".", "/")}.avsc`,
+                {
+                    headers : {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                },
+            );
+
+            setSchema(CustomAvroParser.getNamedTypes(await schemaContent.text()));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect((): any => {
+        fetchSchema();
+    }, [item]);
+
 
     if (schema && schema.name) {
-        const isEnum =  AVRO.Type.isType(schema, "enum");
-        if (isEnum) {
+        if (AvroTypeHelper.isEnumType(schema)) {
             return <Enum schema={schema} />;
         } else {
             return <Record schema={schema} />;

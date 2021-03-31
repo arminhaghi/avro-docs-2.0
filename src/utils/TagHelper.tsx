@@ -1,75 +1,109 @@
-import * as AVRO from "avsc";
 import React, { Fragment } from "react";
 import DataType from "../components/DataType";
+import { ArrayType, ComplexType, ComplexTypes, LogicalType, MapType, NullType, PrimitiveTypes, Type } from "../models/AvroSchema";
+import { RowData } from "../models/FieldsColumn";
 import { TagColorPicker } from "./TagColorPicker";
-import { ComplexType, TypeHelper } from "./TypeHelper";
+import { TypeHelper } from "./TypeHelper";
 
 export class TagHelper {
 
-    public static render(schema: ComplexType): JSX.Element {
-        const branchName = schema.branchName || "";
+    public static render(type: Type, record: RowData): JSX.Element {
         const key = Math.random();
 
-        if (branchName === "array") {
-            const tagData = TypeHelper.formatTag(branchName, (schema as AVRO.types.ArrayType).itemsType.branchName || "");
-            tagData.text = `ARRAY<${tagData.text}>`;
+        switch (type) {
+        case NullType:
+        case PrimitiveTypes.BOOLEAN:
+        case PrimitiveTypes.BYTES:
+        case PrimitiveTypes.DOUBLE:
+        case PrimitiveTypes.FLOAT:
+        case PrimitiveTypes.INT:
+        case PrimitiveTypes.LONG:
+        case PrimitiveTypes.STRING:
             return (
                 <DataType
-                    color={TagColorPicker.pick(branchName)}
+                    color={TagColorPicker.pick(type)}
                     key={key.toString()}
-                    data={tagData}
+                    data={TypeHelper.formatTag(type, record)}
                 />
             );
-        } else if (AVRO.Type.isType(schema, "record")) {
-            const tagData = TypeHelper.formatTag("record", branchName);
 
+        case ComplexTypes.RECORD:
+        case ComplexTypes.ENUM:
+        case ComplexTypes.FIXED:
             return (
                 <DataType
-                    color={TagColorPicker.pick("record")}
+                    color={TagColorPicker.pick((type as unknown as ComplexType).type)}
                     key={key.toString()}
-                    data={tagData}
+                    data={TypeHelper.formatTag(type, record)}
                 />
-            );
-        } else if (AVRO.Type.isType(schema, "enum")) {
-            const tagData = TypeHelper.formatTag("enum", branchName, schema.doc);
-
-            return (
-                <DataType
-                    color={TagColorPicker.pick("enum")}
-                    key={key.toString()}
-                    data={tagData}
-                />
-            );
-        } else if (AVRO.Type.isType(schema, "union")) {
-            const unionType = schema as AVRO.types.UnwrappedUnionType;
-            const branchName1 = unionType.types[0].branchName || "";
-            const branchName2 = unionType.types[1].branchName || "";
-
-            return (
-                <Fragment key={key.toString()}>
-                    <DataType
-                        color={TagColorPicker.pick(branchName1)}
-                        data={TypeHelper.formatTag(branchName1, branchName1)}
-                    />
-                    OR&nbsp;&nbsp;
-                    <DataType
-                        color={TagColorPicker.pick(branchName2)}
-                        data={ TypeHelper.formatTag(branchName2, branchName2)}
-                    />
-                </Fragment>
             );
         }
 
-        const tagData = TypeHelper.formatTag(branchName, branchName);
+        const complexType = type as ComplexType;
+
+        if (!complexType) {
+            return <></>;
+        }
+
+        if (complexType.type === ComplexTypes.RECORD || complexType.type === ComplexTypes.ENUM || complexType.type === ComplexTypes.FIXED) {
+            return (
+                <DataType
+                    color={TagColorPicker.pick(complexType.type)}
+                    key={key.toString()}
+                    data={TypeHelper.formatTag(type, record)}
+                />
+            );
+        } else if (complexType.type === ComplexTypes.ARRAY) {
+            const tagData = TypeHelper.formatTag((complexType as ArrayType).items, record);
+            tagData.text = `ARRAY<${tagData.text}>`;
+            return (
+                <DataType
+                    color={TagColorPicker.pick((complexType as ArrayType).type)}
+                    key={key.toString()}
+                    data={tagData}
+                />
+            );
+        } else if (complexType instanceof Array) { // This is UNION
+            const type1 = complexType[0];
+            const type2 = complexType[1];
+
+            return (
+                <Fragment key={key.toString()}>
+                    {
+                        TagHelper.render(type1, record)
+                    }
+                    OR&nbsp;&nbsp;
+                    {
+                        TagHelper.render(type2, record)
+                    }
+                </Fragment>
+            );
+        } else if (complexType.type === ComplexTypes.MAP) {
+            const tagData = TypeHelper.formatTag((complexType as MapType).values, record);
+            tagData.text = `MAP<${tagData.text}>`;
+            return (
+                <DataType
+                    color={TagColorPicker.pick((complexType as MapType).type)}
+                    key={key.toString()}
+                    data={tagData}
+                />
+            );
+        } else if ((complexType as unknown as LogicalType).logicalType && (complexType as unknown as LogicalType).logicalType.length) {
+            return (
+                <DataType
+                    color={TagColorPicker.pick(complexType.type)}
+                    key={key.toString()}
+                    data={TypeHelper.formatTag(type, record)}
+                />
+            );
+        }
 
         return (
             <DataType
-                color={TagColorPicker.pick(branchName)}
+                color={TagColorPicker.pick(complexType.type)}
                 key={key.toString()}
-                data={tagData}
+                data={TypeHelper.formatTag(type, record)}
             />
         );
     }
-
-
 }

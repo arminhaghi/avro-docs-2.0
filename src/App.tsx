@@ -3,6 +3,7 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
+import All from "./All";
 import Item from "./Item";
 import AppLayout from "./components/AppLayout";
 import { DataProvider } from "./context/data";
@@ -20,8 +21,7 @@ export default function App(): JSX.Element {
                     </Route>
                     <Route path="/">
                         <AppLayout>
-                            <h1>Welcome to AVRO Docs!</h1>
-                            <p>Select a type from the side menu to start.</p>
+                            <All />
                         </AppLayout>
                     </Route>
                 </Switch>

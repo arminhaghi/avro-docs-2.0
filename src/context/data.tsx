@@ -1,12 +1,11 @@
-import * as AVRO from "avsc";
 import React, { createContext, useContext, useMemo, useEffect, useReducer } from "react";
 import AvroFileList from "../avro-file-list.json";
-import { AvroParser } from "../utils/AvroParser";
+import { NamedType } from "../models/AvroSchema";
+import { CustomAvroParser } from "../utils/CustomAvroParser";
 
 interface ContextState {
-    namespaces: string[];
     namespaceTree: Map<string, string[]>;
-    schemas: Map<string, AVRO.Schema>;
+    schemas: NamedType[];
 }
 
 export enum DataActions {
@@ -20,9 +19,8 @@ interface Action {
 
 
 const initialState = {
-    namespaces: [],
     namespaceTree: new Map(),
-    schemas: new Map(),
+    schemas: [],
 };
 
 function reducer(state: ContextState, action: Action): ContextState {
@@ -43,47 +41,43 @@ const DataContext = createContext<[ContextState, React.Dispatch<Action>]>(
     [initialState, (): undefined => undefined],
 );
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const DataProvider = (props: any): JSX.Element => {
     const [appData, dispatch] = useReducer(reducer, initialState);
     const value = useMemo(() => [appData, dispatch], [appData, dispatch]);
 
     const readSchemas = async () => {
-        const records = new Map<string, AVRO.Schema>();
+        const namespaceTree = new Map<string, string[]>();
+        const schemaArray: NamedType[] = [];
 
         for (let i = 0; i < AvroFileList.length; i++) {
-            const schema = await fetch(
-                process.env.PUBLIC_URL + AvroFileList[i],
+            const schemaContent = await fetch(
+                `${process.env.PUBLIC_URL}${AvroFileList[i]}`,
                 {
                     headers : {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
                     },
-                }
+                },
             );
+            const namedType = CustomAvroParser.getNamedTypes(await schemaContent.text());
+            schemaArray.push({
+                name: namedType.name,
+                namespace: namedType.namespace,
+                type: namedType.type,
+                doc: namedType.doc,
+                aliases: [],
+            });
 
-            const parsed = AVRO.parse(JSON.stringify(await schema.json()));
-            AvroParser.GetAllRecords(parsed, records);
+            const children = namespaceTree.get(namedType.namespace) || [];
+            children.push(namedType.name);
+            namespaceTree.set(namedType.namespace, children);
         }
-
-        const namespaces = Array.from(records.keys());
-        const namespaceTree = new Map<string, string[]>();
-        const schemas = new Map<string, AVRO.Schema>();
-
-        namespaces.forEach(namespace => {
-            const parent = namespace.substring(0, namespace.lastIndexOf(".")) || "UNKNOWN";
-            const child = namespace.substring(namespace.lastIndexOf(".") + 1);
-            const children = namespaceTree.get(parent) || [];
-            children.push(child);
-            namespaceTree.set(parent, children);
-
-            schemas.set(namespace.toLowerCase(), records.get(namespace) || "");
-        });
 
         dispatch({
             type: DataActions.SetData, payload: {
                 namespaceTree: namespaceTree,
-                namespaces: namespaces,
-                schemas: schemas,
+                schemas: schemaArray,
             },
         });
     };
