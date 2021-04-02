@@ -6,6 +6,8 @@ import { TagHelper } from "../utils/TagHelper";
 import { NamedType } from "./AvroSchema";
 
 export interface RowData {
+    // Used for reference of origin scheam
+    sourceItemName: string;
     // This is only used when namespace is undefuned in type because namespace is the same as parent
     defaultNamespace: string;
     name: string;
@@ -29,6 +31,7 @@ export const IndexColumns = [
         title: "Name",
         dataIndex: "name",
         key: "name",
+        width: 350,
         render: (text: string, record: NamedType): JSX.Element => (
             <Link to={`/${record.namespace}.${text}`}>{text}</Link>
         ),
@@ -36,8 +39,10 @@ export const IndexColumns = [
     {
         title: "Type",
         dataIndex: "type",
+        width: 100,
+        className: "all-type-column",
         render:  (text: string): JSX.Element => (
-            <Tag>
+            <Tag style={{ textAlign: "center" }}>
                 <strong>{text.toUpperCase()}</strong>
             </Tag>
         ),
@@ -45,11 +50,12 @@ export const IndexColumns = [
     {
         title: "Documentation",
         dataIndex: "doc",
+        className: "all-doc-column",
         render: (text: string): JSX.Element => <ReactMarkdown linkTarget="_blank">{text}</ReactMarkdown>,
     },
 ];
 
-export const FieldColumns = [
+export const RecordColumns = [
     {
         title: "Name",
         dataIndex: "name",

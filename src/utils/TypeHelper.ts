@@ -1,6 +1,6 @@
 import { TagData } from "../components/DataType";
 import { ComplexType, ComplexTypes, LogicalType, NamedType, NullType, PrimitiveTypes, Type } from "../models/AvroSchema";
-import { RowData } from "../models/FieldsColumn";
+import { RowData } from "../models/TableColumns";
 import { StringExtentions } from "./StringExtentions";
 
 export class TypeHelper {
@@ -59,7 +59,7 @@ export class TypeHelper {
             return {
                 text: namedType.name,
                 tooltip: StringExtentions.truncateWithEllipsis(namedType.doc, 500),
-                path: namedType.namespace && namedType.namespace.length ? `${namedType.namespace}.${namedType.name}` : `${record.defaultNamespace}.${namedType.name}`,
+                path: namedType.namespace && namedType.namespace.length ? `${namedType.namespace}.${namedType.name}?source=${record.sourceItemName}` : `${record.defaultNamespace}.${namedType.name}?source=${record.sourceItemName}`,
             };
         }
 

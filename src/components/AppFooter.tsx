@@ -8,7 +8,7 @@ const AppFooter = (): JSX.Element => {
             borderTop: "1px solid navy",
             padding: "0",
         }}>
-            Avro Docs - Created by Armin
+            Avro Docs React
         </Footer>
     );
 };

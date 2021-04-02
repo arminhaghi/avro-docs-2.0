@@ -2,7 +2,7 @@ import { PageHeader, Table, Tag } from "antd";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { ComplexTypes, EnumType, NamedType } from "../models/AvroSchema";
-import { EnumColumns, EnumData } from "../models/FieldsColumn";
+import { EnumColumns, EnumData } from "../models/TableColumns";
 import { TagColorPicker } from "../utils/TagColorPicker";
 
 interface PropsType {
@@ -27,7 +27,7 @@ const Enum = (props: PropsType): JSX.Element => {
     });
 
     return (
-        <>
+        <div style={{ padding: "24px" }}>
             <PageHeader
                 title={enumName}
                 tags={<Tag color={TagColorPicker.pick(ComplexTypes.ENUM)}>{ComplexTypes.ENUM.toUpperCase()}</Tag>}
@@ -35,10 +35,10 @@ const Enum = (props: PropsType): JSX.Element => {
                     paddingLeft: 0,
                 }}
             />
-            <p>Fully qualified name: <strong>{schema.name}</strong></p>
+            <p>Fully qualified name: <strong>{schema.namespace}.{schema.name}</strong></p>
             <code><ReactMarkdown linkTarget="_blank">{schema.doc || ""}</ReactMarkdown></code>
             <Table bordered columns={EnumColumns} dataSource={rows} pagination={false} />
-        </>
+        </div>
     );
 };
 

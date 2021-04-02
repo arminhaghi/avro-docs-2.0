@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import DataType from "../components/DataType";
 import { ArrayType, ComplexType, ComplexTypes, LogicalType, MapType, NullType, PrimitiveTypes, Type } from "../models/AvroSchema";
-import { RowData } from "../models/FieldsColumn";
+import { RowData } from "../models/TableColumns";
 import { TagColorPicker } from "./TagColorPicker";
 import { TypeHelper } from "./TypeHelper";
 

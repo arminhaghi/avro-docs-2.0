@@ -5,13 +5,16 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 100px;
+  position: fixed;
+  left: 50%;
+  top: 40%;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 5s linear;
   }
 }
 
@@ -40,13 +43,19 @@
 }
 
 .content-layout {
-  padding: 24px;
-  overflow: auto;
-  margin: 0;
+  padding-left: 1px;
 }
 
 .sider-layout {
   overflow: auto;
   height: "calc(100vh - 88px)";
   max-width: "calc(100vh - 88px)";
+}
+
+.sider-layout::-webkit-scrollbar {
+  display: none;
+}
+
+.all-type-column {
+  text-align: center;
 }

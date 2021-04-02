@@ -6,6 +6,7 @@ import { CustomAvroParser } from "../utils/CustomAvroParser";
 interface ContextState {
     namespaceTree: Map<string, string[]>;
     schemas: NamedType[];
+    failure: string;
 }
 
 export enum DataActions {
@@ -21,6 +22,7 @@ interface Action {
 const initialState = {
     namespaceTree: new Map(),
     schemas: [],
+    failure: "",
 };
 
 function reducer(state: ContextState, action: Action): ContextState {
@@ -47,39 +49,51 @@ export const DataProvider = (props: any): JSX.Element => {
     const value = useMemo(() => [appData, dispatch], [appData, dispatch]);
 
     const readSchemas = async () => {
-        const namespaceTree = new Map<string, string[]>();
-        const schemaArray: NamedType[] = [];
+        try {
+            const namespaceTree = new Map<string, string[]>();
+            const schemaArray: NamedType[] = [];
 
-        for (let i = 0; i < AvroFileList.length; i++) {
-            const schemaContent = await fetch(
-                `${process.env.PUBLIC_URL}${AvroFileList[i]}`,
-                {
-                    headers : {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
+            for (let i = 0; i < AvroFileList.length; i++) {
+                const schemaContent = await fetch(
+                    `${process.env.PUBLIC_URL}${AvroFileList[i]}`,
+                    {
+                        headers : {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                        },
                     },
+                );
+                const namedType = CustomAvroParser.getNamedTypes(await schemaContent.text());
+                schemaArray.push({
+                    name: namedType.name,
+                    namespace: namedType.namespace,
+                    type: namedType.type,
+                    doc: namedType.doc,
+                    aliases: [],
+                });
+
+                const children = namespaceTree.get(namedType.namespace) || [];
+                children.push(namedType.name);
+                namespaceTree.set(namedType.namespace, children);
+            }
+
+            dispatch({
+                type: DataActions.SetData, payload: {
+                    namespaceTree: namespaceTree,
+                    schemas: schemaArray,
+                    failure: "",
                 },
-            );
-            const namedType = CustomAvroParser.getNamedTypes(await schemaContent.text());
-            schemaArray.push({
-                name: namedType.name,
-                namespace: namedType.namespace,
-                type: namedType.type,
-                doc: namedType.doc,
-                aliases: [],
             });
-
-            const children = namespaceTree.get(namedType.namespace) || [];
-            children.push(namedType.name);
-            namespaceTree.set(namedType.namespace, children);
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type: DataActions.SetData, payload: {
+                    namespaceTree: new Map(),
+                    schemas: [],
+                    failure: "Failed loading schema tree!",
+                },
+            });
         }
-
-        dispatch({
-            type: DataActions.SetData, payload: {
-                namespaceTree: namespaceTree,
-                schemas: schemaArray,
-            },
-        });
     };
 
     useEffect((): any => {

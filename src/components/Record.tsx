@@ -2,21 +2,25 @@ import { PageHeader, Table, Tag } from "antd";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { AvroSchema, ComplexTypes, NamedType, RecordType, Type } from "../models/AvroSchema";
-import { RowData, FieldColumns } from "../models/FieldsColumn";
+import { RowData, RecordColumns } from "../models/TableColumns";
 import { AvroTypeHelper } from "../utils/AvroTypeHelper";
 import { CustomAvroParser } from "../utils/CustomAvroParser";
 import { TagColorPicker } from "../utils/TagColorPicker";
 
 interface PropsType {
-    schema: NamedType;
+    schema: {
+        base: NamedType;
+        current: NamedType;
+    };
+    sourceItemName: string | undefined;
 }
 
 const Record = (props: PropsType): JSX.Element => {
     // If a custom type appears more than once in the schema, only the first appearance of it will have all the details.
-    const externalTypes: Map<string, Type> = new Map();
-    const schema = props.schema as RecordType;
+    const schema = props.schema.current as RecordType;
     const baseNamespace = schema.namespace;
-    CustomAvroParser.extractExternalTypes(schema, externalTypes, baseNamespace);
+    const externalTypes: Map<string, Type> = new Map();
+    CustomAvroParser.extractExternalTypes(props.schema.base as RecordType, externalTypes, props.schema.base.namespace);
 
     const rows: RowData[] = schema.fields.map(field => {
         if (field && typeof field.type === "string") {
@@ -48,23 +52,40 @@ const Record = (props: PropsType): JSX.Element => {
                     }
                 }
             }
-        }
-
-        // @ts-ignore
-        if (typeof field.type !== "string") {
-            if (AvroTypeHelper.isRecordType(field.type as AvroSchema)) {
+        } else if (field && AvroTypeHelper.isArrayType(field.type as AvroSchema)) {
+            // @ts-ignore
+            const type = field.type.items;
+            if (typeof type === "string") {
                 // @ts-ignore
-                field.type = { ...field.type, doc: "", fields: [] };
-            } else if (AvroTypeHelper.isEnumType(field.type as AvroSchema)) {
+                if (type === schema.name && !type.namespace) {
+                    // Circular Dependency. Intentionally leaving the type definition out.
+                } else if (type.indexOf(".") > -1 && externalTypes.has(type)) {
+                    // @ts-ignore
+                    field.type.items = externalTypes.get(type);
+                } else if (externalTypes.has(`${baseNamespace}.${type}`)) {
+                    // @ts-ignore
+                    field.type.items = externalTypes.get(`${baseNamespace}.${type}`);
+                }
+            }
+        } else if (field && AvroTypeHelper.isMapType(field.type as AvroSchema)) {
+            // @ts-ignore
+            const type = field.type.values;
+            if (typeof type === "string") {
                 // @ts-ignore
-                field.type = { ...field.type, doc: "", symbols: [] };
-            } else if (AvroTypeHelper.isArrayType(field.type as AvroSchema)) {
-                // @ts-ignore
-                field.items = { ...field.items, doc: "", fields: [], symbols: [] };
+                if (type === schema.name && !type.namespace) {
+                    // Circular Dependency. Intentionally leaving the type definition out.
+                } else if (type.indexOf(".") > -1 && externalTypes.has(type)) {
+                    // @ts-ignore
+                    field.type.values = externalTypes.get(type);
+                } else if (externalTypes.has(`${baseNamespace}.${type}`)) {
+                    // @ts-ignore
+                    field.type.values = externalTypes.get(`${baseNamespace}.${type}`);
+                }
             }
         }
 
         return {
+            sourceItemName: props.sourceItemName ? props.sourceItemName : `${schema.namespace}.${schema.name}`,
             defaultNamespace: baseNamespace,
             name: field.name,
             type: field.type,
@@ -76,7 +97,7 @@ const Record = (props: PropsType): JSX.Element => {
     let i = 0;
 
     return (
-        <>
+        <div style={{ padding: "24px" }}>
             <PageHeader
                 title={schema.name}
                 tags={<Tag color={TagColorPicker.pick(ComplexTypes.RECORD)}>{ComplexTypes.RECORD.toUpperCase()}</Tag>}
@@ -86,8 +107,8 @@ const Record = (props: PropsType): JSX.Element => {
             />
             <p>Fully qualified name: <strong>{schema.namespace}.{schema.name}</strong></p>
             <code><ReactMarkdown linkTarget="_blank">{schema.doc || ""}</ReactMarkdown></code>
-            {<Table bordered rowKey={() => (i++)} columns={FieldColumns} dataSource={rows} pagination={false} />}
-        </>
+            {<Table bordered rowKey={() => (i++)} columns={RecordColumns} dataSource={rows} pagination={false} />}
+        </div>
     );
 };
 
