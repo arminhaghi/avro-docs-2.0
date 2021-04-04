@@ -1,7 +1,7 @@
 {
-  "name": "avro-docs-react",
+  "name": "@armin/avro-docs-react",
   "version": "1.0.0",
-  "private": true,
+  "license": "MIT",
   "dependencies": {
     "@testing-library/jest-dom": "5.11.10",
     "@testing-library/react": "11.2.6",
