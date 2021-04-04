@@ -32,9 +32,9 @@ async function readAndSaveSchemas() {
         const namedType = CustomAvroParser.getNamedTypes(schema.content);
         schemaArray.push({
             name: namedType.name,
-            namespace: namedType.namespace,
+            namespace: namedType.namespace || "undefined",
             type: namedType.type,
-            doc: namedType.doc,
+            doc: namedType.doc || "",
             aliases: [],
         });
 
