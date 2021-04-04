@@ -1,26 +1,37 @@
 {
   "name": "avro-docs-react",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-scripts": "4.0.2",
-    "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "@testing-library/jest-dom": "5.11.10",
+    "@testing-library/react": "11.2.6",
+    "@testing-library/user-event": "12.8.3",
+    "@types/jest": "26.0.22",
+    "@types/node": "12.0.0",
+    "@types/react": "17.0.3",
+    "@types/react-dom": "17.0.3",
+    "@typescript-eslint/eslint-plugin": "4.20.0",
+    "@typescript-eslint/parser": "4.20.0",
+    "antd": "4.15.0",
+    "eslint": "7.23.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-react": "7.23.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-markdown": "5.0.3",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "4.0.3",
+    "ts-node": "9.1.1",
+    "typescript": "4.2.3",
+    "web-vitals": "1.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm run generate-list && react-scripts start",
+    "build": "npm run generate-list && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "generate-list": "ts-node-script ./bin/GenerateList.ts"
   },
   "eslintConfig": {
     "extends": [

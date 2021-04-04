@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+} from "react-router-dom";
+import All from "./All";
+import Item from "./Item";
+import AppLayout from "./components/AppLayout";
+import { DataProvider } from "./context/data";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App(): JSX.Element {
+    return (
+        <Router>
+            <DataProvider>
+                <Switch>
+                    <Route path="/:item">
+                        <AppLayout>
+                            <Item />
+                        </AppLayout>
+                    </Route>
+                    <Route path="/">
+                        <AppLayout>
+                            <All />
+                        </AppLayout>
+                    </Route>
+                </Switch>
+            </DataProvider>
+        </Router>
+    );
 }
-
-export default App;
