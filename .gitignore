@@ -23,4 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 public/avro/
-avro-file-list.json
+all-schemas-summary.json
+namespace-tree.json

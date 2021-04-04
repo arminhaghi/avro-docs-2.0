@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo, useEffect, useReducer } from "react";
-import AvroFileList from "../avro-file-list.json";
+import AllSchemaSummary from "../all-schemas-summary.json";
 import { NamedType } from "../models/AvroSchema";
-import { CustomAvroParser } from "../utils/CustomAvroParser";
+import NamespaceTree from "../namespace-tree.json";
+import { MapHelper } from "../utils/MapHelper";
 
 interface ContextState {
     namespaceTree: Map<string, string[]>;
@@ -50,37 +51,10 @@ export const DataProvider = (props: any): JSX.Element => {
 
     const readSchemas = async () => {
         try {
-            const namespaceTree = new Map<string, string[]>();
-            const schemaArray: NamedType[] = [];
-
-            for (let i = 0; i < AvroFileList.length; i++) {
-                const schemaContent = await fetch(
-                    `${process.env.PUBLIC_URL}${AvroFileList[i]}`,
-                    {
-                        headers : {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json",
-                        },
-                    },
-                );
-                const namedType = CustomAvroParser.getNamedTypes(await schemaContent.text());
-                schemaArray.push({
-                    name: namedType.name,
-                    namespace: namedType.namespace,
-                    type: namedType.type,
-                    doc: namedType.doc,
-                    aliases: [],
-                });
-
-                const children = namespaceTree.get(namedType.namespace) || [];
-                children.push(namedType.name);
-                namespaceTree.set(namedType.namespace, children);
-            }
-
             dispatch({
                 type: DataActions.SetData, payload: {
-                    namespaceTree: namespaceTree,
-                    schemas: schemaArray,
+                    namespaceTree: MapHelper.jsonToMap(NamespaceTree) as Map<string, string[]>,
+                    schemas: AllSchemaSummary,
                     failure: "",
                 },
             });
