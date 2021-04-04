@@ -30,6 +30,7 @@ Notes:
 .\public\avro\com\example\internal\User.avsc
 .\public\avro\com\example\Person.avsc
 ```
+Take a look at the [github-pages-deploy](https://github.com/arminhaghi/avro-docs-react/tree/github-pages-deploy) branch to learn more.
 
 ### Features
 
