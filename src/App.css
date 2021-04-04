@@ -42,14 +42,18 @@
   }
 }
 
+/* 88 is the magic number that is basically header + footer */
 .content-layout {
   padding-left: 1px;
+  overflow: auto;
+  height: "calc(100vh - 88px)";
+  max-height: "calc(100vh - 88px)";
 }
 
 .sider-layout {
   overflow: auto;
   height: "calc(100vh - 88px)";
-  max-width: "calc(100vh - 88px)";
+  max-height: "calc(100vh - 88px)";
 }
 
 .sider-layout::-webkit-scrollbar {
