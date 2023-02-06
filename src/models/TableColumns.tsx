@@ -89,7 +89,7 @@ export const EnumColumns = [
         render: (option: Option): JSX.Element => (
             <>
                 <span>{option.title}</span>
-                {option.default ? <Badge offset={[40, 0]} count={"deserialization default value"} style={{ backgroundColor: "#108ee9" }} /> : null}
+                {option.default ? <Badge offset={[40, 0]} count="deserialization default value" style={{ backgroundColor: "#108ee9" }} /> : null}
             </>
 
         ),

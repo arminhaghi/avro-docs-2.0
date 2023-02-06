@@ -47,4 +47,9 @@ export class AvroTypeHelper {
         }
         return "logicalType" in schema;
     }
+
+    public static isFixedType(schema: AvroSchema): schema is ComplexType {
+        return schema.type === "fixed";
+    }
+
 }

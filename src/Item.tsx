@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Enum from "./components/Enum";
+import Fixed from "./components/Fixed";
 import Record from "./components/Record";
 import errorImage from "./error.png";
 import loading from "./loading.png";
@@ -63,6 +64,8 @@ const Item = (): JSX.Element => {
     if (schema && schema.current && schema.current.name) {
         if (AvroTypeHelper.isEnumType(schema.current)) {
             return <Enum schema={schema.current} />;
+        } else if (AvroTypeHelper.isFixedType(schema.current)) {
+            return <Fixed schema={schema} sourceItemName={source} />;
         } else {
             return <Record schema={schema} sourceItemName={source} />;
         }
