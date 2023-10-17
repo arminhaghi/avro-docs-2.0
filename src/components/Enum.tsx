@@ -3,6 +3,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import { ComplexTypes, EnumType, NamedType } from "../models/AvroSchema";
 import { EnumColumns, EnumData } from "../models/TableColumns";
+import { EnumMapper } from "../utils/FieldHelper";
 import { TagColorPicker } from "../utils/TagColorPicker";
 
 interface PropsType {
@@ -11,20 +12,9 @@ interface PropsType {
 
 const Enum = (props: PropsType): JSX.Element => {
     const schema = props.schema as EnumType;
-    let i = -1;
-
     const enumName = schema.name.substring(schema.name.lastIndexOf(".") + 1);
 
-    const rows: EnumData[] = schema.symbols.map((symbol) => {
-        i++;
-        return {
-            option: {
-                title: symbol,
-                default: symbol === schema.default,
-            },
-            key: i.toString(),
-        };
-    });
+    const rows: EnumData[] = EnumMapper(schema);
 
     return (
         <div style={{ padding: "24px" }}>

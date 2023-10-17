@@ -30,10 +30,8 @@ export class TagColorPicker {
                 return "green";
             case ComplexTypes.MAP:
                 return "volcano";
-            case "magenta":
-            case "lime":
-            case "cyan":
-            case "gold":
+            case ComplexTypes.FIXED:
+                return "magenta";
             }
 
 

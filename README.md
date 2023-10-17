@@ -1,13 +1,13 @@
-# Avro Docs React
+# Avro Docs 2.0
 
-Avro Docs React is a web app to display for Avro schema documentation.
+Avro Docs 2.0 is a web app to display for Avro schema documentation.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and it was inspired by https://github.com/ept/avrodoc.
 
 Checkout it out live on [Github pages](https://arminhaghi.github.io/avro-docs-react/#/).
 
 ### How to use
-You need [node.js](http://nodejs.org/) installed. I've tested this with Node 12.
+You need [node.js](http://nodejs.org/) installed. I've tested this with Node 18.
 
 Clone the repo
 

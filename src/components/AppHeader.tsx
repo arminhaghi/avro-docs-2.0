@@ -1,7 +1,7 @@
 import { Layout, Select } from "antd";
 import { Link, useHistory, useParams, useLocation } from "react-router-dom";
 import { useDataContext } from "../context/data";
-import logo from "./logo.png";
+import smallLogo from "./small-logo.png";
 
 const AppHeader = (): JSX.Element => {
     const { Header } = Layout;
@@ -11,27 +11,27 @@ const AppHeader = (): JSX.Element => {
     const { item } = useParams<{ item: string }>();
     const location = useLocation();
 
-    const selectionHandler = (value) => {
+    const selectionHandler = (value: any) => {
         history.push(`/${value}`);
     };
-    const changeHandler = (value) => {
+    const changeHandler = (value: any) => {
         if (value === undefined && location.pathname !== "/") {
             history.push("/");
         }
     };
 
     return (
-        <Header>
+        <Header style={{ backgroundColor: "#00092D" }} >
             <div style={{ float: "left" }}>
                 <Link to="/">
                     <h1 style={{ color: "#ffffff" }}>
-                        <img src={logo} style={{ width: "50px", marginRight: "15px" }} alt="logo" />
-                        Avro Docs React
+                        <img src={smallLogo} style={{ width: "42px", marginRight: "15px", marginTop: "-5px" }} alt="logo" />
+                        Avro Docs 2.0
                     </h1>
                 </Link>
             </div>
             <div style={{ float: "right" }}>
-                <Select
+                {location.pathname !== "/" && <Select
                     showSearch
                     style={{ width: 600 }}
                     placeholder="Select a schema"
@@ -39,11 +39,9 @@ const AppHeader = (): JSX.Element => {
                     onChange={changeHandler}
                     allowClear={true}
                     defaultActiveFirstOption={false}
-                    disabled={appData.schemas.length === 0}
                     value={item}
-                    filterOption={(input, option) => (
-                        option?.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    )}
+                    // @ts-ignore
+                    filterOption={(input, option) => (option?.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0)}
                 >
                     {
                         Array.from(appData.namespaceTree.keys()).map(key => {
@@ -54,7 +52,7 @@ const AppHeader = (): JSX.Element => {
                             );
                         })
                     }
-                </Select>
+                </Select>}
             </div>
         </Header>
     );

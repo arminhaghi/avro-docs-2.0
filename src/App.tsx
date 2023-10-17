@@ -3,7 +3,7 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-import All from "./All";
+import Home from "./Home";
 import Item from "./Item";
 import AppLayout from "./components/AppLayout";
 import { DataProvider } from "./context/data";
@@ -20,9 +20,7 @@ export default function App(): JSX.Element {
                         </AppLayout>
                     </Route>
                     <Route path="/">
-                        <AppLayout>
-                            <All />
-                        </AppLayout>
+                        <Home />
                     </Route>
                 </Switch>
             </DataProvider>
