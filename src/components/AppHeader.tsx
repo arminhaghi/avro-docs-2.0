@@ -1,7 +1,7 @@
 import { Layout, Select } from "antd";
 import { Link, useHistory, useParams, useLocation } from "react-router-dom";
 import { useDataContext } from "../context/data";
-import logo from "./logo.png";
+import smallLogo from "./small-logo.png";
 
 const AppHeader = (): JSX.Element => {
     const { Header } = Layout;
@@ -21,12 +21,12 @@ const AppHeader = (): JSX.Element => {
     };
 
     return (
-        <Header>
+        <Header style={{ backgroundColor: "#00092D" }} >
             <div style={{ float: "left" }}>
                 <Link to="/">
                     <h1 style={{ color: "#ffffff" }}>
-                        <img src={logo} style={{ width: "45px", marginRight: "15px" }} alt="logo" />
-                        Avro Docs React
+                        <img src={smallLogo} style={{ width: "42px", marginRight: "15px", marginTop: "-5px" }} alt="logo" />
+                        Avro Docs 2.0
                     </h1>
                 </Link>
             </div>
