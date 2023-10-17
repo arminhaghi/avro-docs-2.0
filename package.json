@@ -1,8 +1,8 @@
 {
-  "name": "@armin/avro-docs-react",
+  "name": "@armin/avro-docs",
   "version": "2.0.0",
   "license": "MIT",
-  "homepage": "https://arminhaghi.github.io/avro-docs-react",
+  "homepage": "https://arminhaghi.github.io/avro-docs-2.0",
   "dependencies": {
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "13.4.0",
