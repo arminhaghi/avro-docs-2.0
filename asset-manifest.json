@@ -1,28 +1,19 @@
 {
   "files": {
-    "main.css": "/avro-docs-react/static/css/main.877dce1c.chunk.css",
-    "main.js": "/avro-docs-react/static/js/main.13d66d22.chunk.js",
-    "main.js.map": "/avro-docs-react/static/js/main.13d66d22.chunk.js.map",
-    "runtime-main.js": "/avro-docs-react/static/js/runtime-main.a7cd406e.js",
-    "runtime-main.js.map": "/avro-docs-react/static/js/runtime-main.a7cd406e.js.map",
-    "static/css/2.26ca8a35.chunk.css": "/avro-docs-react/static/css/2.26ca8a35.chunk.css",
-    "static/js/2.f62d1516.chunk.js": "/avro-docs-react/static/js/2.f62d1516.chunk.js",
-    "static/js/2.f62d1516.chunk.js.map": "/avro-docs-react/static/js/2.f62d1516.chunk.js.map",
-    "static/js/3.5a2d2967.chunk.js": "/avro-docs-react/static/js/3.5a2d2967.chunk.js",
-    "static/js/3.5a2d2967.chunk.js.map": "/avro-docs-react/static/js/3.5a2d2967.chunk.js.map",
-    "index.html": "/avro-docs-react/index.html",
-    "static/css/2.26ca8a35.chunk.css.map": "/avro-docs-react/static/css/2.26ca8a35.chunk.css.map",
-    "static/css/main.877dce1c.chunk.css.map": "/avro-docs-react/static/css/main.877dce1c.chunk.css.map",
-    "static/js/2.f62d1516.chunk.js.LICENSE.txt": "/avro-docs-react/static/js/2.f62d1516.chunk.js.LICENSE.txt",
-    "static/media/error.fdf679d2.png": "/avro-docs-react/static/media/error.fdf679d2.png",
-    "static/media/loading.390b818e.png": "/avro-docs-react/static/media/loading.390b818e.png",
-    "static/media/logo.46066d9c.png": "/avro-docs-react/static/media/logo.46066d9c.png"
+    "main.css": "/avro-docs-2.0/static/css/main.15a1d635.css",
+    "main.js": "/avro-docs-2.0/static/js/main.04da23ff.js",
+    "static/js/787.2d6f3beb.chunk.js": "/avro-docs-2.0/static/js/787.2d6f3beb.chunk.js",
+    "static/media/logo-1.png": "/avro-docs-2.0/static/media/logo-1.047b03adbe989d7c31fa.png",
+    "static/media/small-logo.png": "/avro-docs-2.0/static/media/small-logo.13085e2fcfcbc38d853d.png",
+    "static/media/loading.png": "/avro-docs-2.0/static/media/loading.390b818ed33342217906.png",
+    "static/media/error.png": "/avro-docs-2.0/static/media/error.fdf679d2f8eb1a283a41.png",
+    "index.html": "/avro-docs-2.0/index.html",
+    "main.15a1d635.css.map": "/avro-docs-2.0/static/css/main.15a1d635.css.map",
+    "main.04da23ff.js.map": "/avro-docs-2.0/static/js/main.04da23ff.js.map",
+    "787.2d6f3beb.chunk.js.map": "/avro-docs-2.0/static/js/787.2d6f3beb.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.a7cd406e.js",
-    "static/css/2.26ca8a35.chunk.css",
-    "static/js/2.f62d1516.chunk.js",
-    "static/css/main.877dce1c.chunk.css",
-    "static/js/main.13d66d22.chunk.js"
+    "static/css/main.15a1d635.css",
+    "static/js/main.04da23ff.js"
   ]
 }
