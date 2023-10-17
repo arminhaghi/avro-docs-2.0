@@ -1,5 +1,4 @@
-// import * as fs from "fs";
-import fs from "fs";
+import * as fs from "fs";
 import path from "path";
 import { NamedType } from "../src/models/AvroSchema";
 import { CustomAvroParser } from "../src/utils/CustomAvroParser";

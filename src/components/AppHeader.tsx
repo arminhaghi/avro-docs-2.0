@@ -11,10 +11,10 @@ const AppHeader = (): JSX.Element => {
     const { item } = useParams<{ item: string }>();
     const location = useLocation();
 
-    const selectionHandler = (value) => {
+    const selectionHandler = (value: any) => {
         history.push(`/${value}`);
     };
-    const changeHandler = (value) => {
+    const changeHandler = (value: any) => {
         if (value === undefined && location.pathname !== "/") {
             history.push("/");
         }
@@ -41,9 +41,8 @@ const AppHeader = (): JSX.Element => {
                     defaultActiveFirstOption={false}
                     disabled={appData.schemas.length === 0}
                     value={item}
-                    filterOption={(input, option) => (
-                        option?.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    )}
+                    // @ts-ignore
+                    filterOption={(input, option) => (option?.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0)}
                 >
                     {
                         Array.from(appData.namespaceTree.keys()).map(key => {
