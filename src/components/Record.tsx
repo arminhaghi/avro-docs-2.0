@@ -46,12 +46,9 @@ const Record = (props: PropsType): JSX.Element => {
                         if (record.type.type === ComplexTypes.ENUM) {
                             const innerRows: EnumData[] = EnumMapper(record.type as EnumType);
                             return <Table bordered columns={EnumColumns} dataSource={innerRows} pagination={false} />;
-                        } else {
-                            return <></>;
                         }
                     },
                     rowExpandable: (record) => (record.type.type === ComplexTypes.ENUM || record.children.length > 0),
-                    // rowExpandable: (record) => (record.type.type === ComplexTypes.ENUM),
                 }}
             />}
         </div>

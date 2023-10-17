@@ -81,7 +81,6 @@ export function FieldMapper(baseSchema: RecordType, currentSchema: RecordType, s
 
         if (complexType && complexType.type) {
 
-            // if (complexType.type === ComplexTypes.RECORD || complexType.type === ComplexTypes.ENUM) {
             if (complexType.type === ComplexTypes.RECORD) {
                 children = FieldMapper(baseSchema, complexType, sourceItemName);
             } else if (complexType.type === ComplexTypes.ARRAY) {
@@ -93,15 +92,20 @@ export function FieldMapper(baseSchema: RecordType, currentSchema: RecordType, s
                         children = FieldMapper(baseSchema, (arrayType as RecordType), sourceItemName);
                     }
                 }
-            } else if (complexType instanceof Array) { // This is UNION
-                if (isSimpleNullUnion(complexType)) {
-                    children = FieldMapper(baseSchema, (complexType[1].type as RecordType), sourceItemName);
-                }
             } else if (complexType.type === ComplexTypes.MAP) {
                 const mapType = (complexType as MapType).values;
                 // @ts-ignore
                 if (mapType && mapType.type && mapType.type === ComplexTypes.RECORD) {
                     children = FieldMapper(baseSchema, (mapType as RecordType), sourceItemName);
+                }
+            } else if (complexType.type === ComplexTypes.ENUM) {
+                //do nothing since Render function is different and handles these
+            }
+        } else if (complexType) {
+            if (AvroTypeHelper.isUnion(complexType)) {
+                const unionComplexType = retrieveComplexTypeFromSimpleNullUnion(complexType);
+                if (unionComplexType !== undefined) {
+                    children = FieldMapper(baseSchema, (unionComplexType as RecordType), sourceItemName);
                 }
             }
         }
@@ -139,13 +143,21 @@ export function EnumMapper(schema: EnumType): EnumData[] {
     return rows;
 }
 
-function isSimpleNullUnion(complexType: ComplexType): boolean {
+function retrieveComplexTypeFromSimpleNullUnion(complexType: ComplexType): ComplexType | undefined {
     if (complexType instanceof Array && complexType.length === 2) {
-        const hasNull =  complexType[0] === NullType || complexType[1] === NullType;
-        const hasComplexType = complexType[0].type === ComplexTypes.RECORD || complexType[1].type === ComplexTypes.RECORD;
-
-        return hasNull && hasComplexType;
+        const nonNullIndex =  complexType[0] === NullType ? 1 : complexType[1] === NullType ? 0 : -1;
+        if (nonNullIndex >= 0) {
+            if (complexType[nonNullIndex].type === ComplexTypes.RECORD || complexType[nonNullIndex].type === ComplexTypes.ENUM) {
+                return complexType[nonNullIndex];
+            } else if (complexType[nonNullIndex].type === ComplexTypes.MAP) {
+                const mapType = (complexType[nonNullIndex] as MapType).values;
+                // @ts-ignore
+                if (mapType && mapType.type && mapType.type === ComplexTypes.RECORD) {
+                    // @ts-ignore
+                    return mapType as ComplexType;
+                }
+            }
+        }
     }
-
-    return false;
+    return undefined;
 }
