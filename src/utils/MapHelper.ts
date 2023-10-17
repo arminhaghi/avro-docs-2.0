@@ -1,7 +1,7 @@
 export class MapHelper {
 
     public static mapToJsonObject(map: Map<string, unknown>): Record<string, unknown> {
-        const jsonObject = {};
+        const jsonObject: { [key: string]: any } = {};
         map.forEach((value, key) => {
             jsonObject[key] = value;
         });
