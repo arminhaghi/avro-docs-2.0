@@ -1,12 +1,9 @@
 import React, { createContext, useContext, useMemo, useEffect, useReducer } from "react";
-import AllSchemaSummary from "../all-schemas-summary.json";
-import { NamedType } from "../models/AvroSchema";
 import NamespaceTree from "../namespace-tree.json";
 import { MapHelper } from "../utils/MapHelper";
 
 interface ContextState {
     namespaceTree: Map<string, string[]>;
-    schemas: NamedType[];
     failure: string;
 }
 
@@ -20,9 +17,8 @@ interface Action {
 }
 
 
-const initialState = {
+const initialState: ContextState = {
     namespaceTree: new Map(),
-    schemas: [],
     failure: "",
 };
 
@@ -54,7 +50,6 @@ export const DataProvider = (props: any): JSX.Element => {
             dispatch({
                 type: DataActions.SetData, payload: {
                     namespaceTree: MapHelper.jsonToMap(NamespaceTree) as Map<string, string[]>,
-                    schemas: AllSchemaSummary,
                     failure: "",
                 },
             });
@@ -63,7 +58,6 @@ export const DataProvider = (props: any): JSX.Element => {
             dispatch({
                 type: DataActions.SetData, payload: {
                     namespaceTree: new Map(),
-                    schemas: [],
                     failure: "Failed loading schema tree!",
                 },
             });
