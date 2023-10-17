@@ -11,7 +11,7 @@ function FindAllFilesInDirectory(directory) {
         const absolute = path.join(directory, file);
         if (fs.statSync(absolute).isDirectory()) {
             return FindAllFilesInDirectory(absolute);
-        } else {
+        } else if (file.endsWith(".avsc")) {
             return files.push(absolute);
         }
     });
@@ -19,13 +19,14 @@ function FindAllFilesInDirectory(directory) {
 
 function SaveFile(path, content) {
     content = JSON.stringify(content);
-    fs.writeFileSync(path, content);
+    fs.writeFileSync(path, content, { flag: "w" });
 }
 
 async function readAndSaveSchemas() {
     const namespaceTree = new Map<string, string[]>();
     for (let i = 0; i < files.length; i++) {
         const schema = await FileReader.read(files[i]);
+        console.log(`Processing ${files[i]}`);
         const namedType = CustomAvroParser.getNamedTypes(schema.content);
 
         const children = namespaceTree.get(namedType.namespace) || [];
@@ -33,6 +34,7 @@ async function readAndSaveSchemas() {
         namespaceTree.set(namedType.namespace, children);
     }
 
+    console.log("Processing Finished!");
     SaveFile("./src/namespace-tree.json", MapHelper.mapToJsonObject(namespaceTree));
 }
 

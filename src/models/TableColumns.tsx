@@ -6,6 +6,7 @@ import { TagHelper } from "../utils/TagHelper";
 import { NamedType } from "./AvroSchema";
 
 export interface RowData {
+    key: string;
     // Used for reference of origin scheam
     sourceItemName: string;
     // This is only used when namespace is undefuned in type because namespace is the same as parent
@@ -14,6 +15,7 @@ export interface RowData {
     type: any;
     defaultValue: any;
     doc: string;
+    children: RowData[];
 }
 
 interface Option {
@@ -22,8 +24,8 @@ interface Option {
 }
 
 export interface EnumData {
-    option: Option;
     key: string;
+    option: Option;
 }
 
 export const IndexColumns = [
@@ -41,7 +43,7 @@ export const IndexColumns = [
         dataIndex: "type",
         width: 100,
         className: "all-type-column",
-        render:  (text: string): JSX.Element => (
+        render: (text: string): JSX.Element => (
             <Tag style={{ textAlign: "center" }}>
                 <strong>{text.toUpperCase()}</strong>
             </Tag>
