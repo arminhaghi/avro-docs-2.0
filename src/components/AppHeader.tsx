@@ -25,13 +25,13 @@ const AppHeader = (): JSX.Element => {
             <div style={{ float: "left" }}>
                 <Link to="/">
                     <h1 style={{ color: "#ffffff" }}>
-                        <img src={logo} style={{ width: "50px", marginRight: "15px" }} alt="logo" />
+                        <img src={logo} style={{ width: "45px", marginRight: "15px" }} alt="logo" />
                         Avro Docs React
                     </h1>
                 </Link>
             </div>
             <div style={{ float: "right" }}>
-                <Select
+                {location.pathname !== "/" && <Select
                     showSearch
                     style={{ width: 600 }}
                     placeholder="Select a schema"
@@ -39,7 +39,6 @@ const AppHeader = (): JSX.Element => {
                     onChange={changeHandler}
                     allowClear={true}
                     defaultActiveFirstOption={false}
-                    disabled={appData.schemas.length === 0}
                     value={item}
                     // @ts-ignore
                     filterOption={(input, option) => (option?.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0)}
@@ -53,7 +52,7 @@ const AppHeader = (): JSX.Element => {
                             );
                         })
                     }
-                </Select>
+                </Select>}
             </div>
         </Header>
     );
