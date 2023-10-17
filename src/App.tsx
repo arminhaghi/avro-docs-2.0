@@ -20,9 +20,7 @@ export default function App(): JSX.Element {
                         </AppLayout>
                     </Route>
                     <Route path="/">
-                        <AppLayout>
-                            <Home />
-                        </AppLayout>
+                        <Home />
                     </Route>
                 </Switch>
             </DataProvider>
