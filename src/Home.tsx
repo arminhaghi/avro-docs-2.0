@@ -9,10 +9,10 @@ const Home = (): JSX.Element => {
     const { item } = useParams<{ item: string }>();
     const location = useLocation();
 
-    const selectionHandler = (value) => {
+    const selectionHandler = (value: any) => {
         history.push(`/${value}`);
     };
-    const changeHandler = (value) => {
+    const changeHandler = (value: any) => {
         if (value === undefined && location.pathname !== "/") {
             history.push("/");
         }

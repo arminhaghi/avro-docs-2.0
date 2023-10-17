@@ -31,7 +31,7 @@ const AppHeader = (): JSX.Element => {
                 </Link>
             </div>
             <div style={{ float: "right" }}>
-                <Select
+                {location.pathname !== "/" && <Select
                     showSearch
                     style={{ width: 600 }}
                     placeholder="Select a schema"
@@ -52,7 +52,7 @@ const AppHeader = (): JSX.Element => {
                             );
                         })
                     }
-                </Select>
+                </Select>}
             </div>
         </Header>
     );
